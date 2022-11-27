@@ -16,6 +16,10 @@ connectDbAndRunServer();
 // require('./socket/socket-manager');
 //init
 
+app.get('/', (req, res) => {
+    res.send('Hey from shelf server');
+})
+
 /*app.get('/logs', (req, res) => {
     res.json({success: true, logs: logUtils.get()});
 })*/
