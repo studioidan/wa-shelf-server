@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const aiUtil = require('./ai/ai-bridge');
 const mongoose = require('mongoose');
 app.use(cors());
 
@@ -20,9 +21,20 @@ app.get('/', (req, res) => {
     res.send('Hey from shelf server');
 })
 
-/*app.get('/logs', (req, res) => {
-    res.json({success: true, logs: logUtils.get()});
-})*/
+app.post('/predict', async function (req, res) {
+    try {
+        let base64 = req.body.base64;
+        let endpointId = req.body.endpointId;
+        let start = new Date().getTime();
+        let p = await aiUtil.predictImageClassification(endpointId, base64);
+        let time = new Date().getTime() - start;
+        return res.json({success: true, time: time, data: p});
+
+    } catch (e) {
+        return res.json({success: false, message: e});
+    }
+});
+
 
 // const utils = require('./util/util');
 // require('./ai/ai-util').test();
